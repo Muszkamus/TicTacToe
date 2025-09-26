@@ -3,32 +3,43 @@ import { useState } from "react";
 function App() {
   return (
     <div>
-      <GameBox />
+      <Box />
     </div>
   );
 }
 
-function GameBox() {
-  const array = ["", "", "", "o", "x", "o", "o", "x", "o"];
-  const [input, setInput] = useState();
-  console.log(array);
+function Box() {
+  const [board, setBoard] = useState(Array(9).fill(""));
 
-  function handleInput(id) {
-    // replace exsiting array with the id as index and input being the letter (needs to use memo as the function re-renders 9 times)
-    console.log(input);
+  const [count, setCount] = useState(0);
+
+  function handleClick(id) {
+    let letter = count % 2 === 0 ? "X" : "O";
+
+    setBoard((prev) => {
+      // Very useful for swapping the content within the state
+
+      const copy = [...prev];
+      if (copy[id] === "") {
+        setCount(count + 1);
+        copy[id] = letter;
+
+        return copy;
+      }
+
+      return prev;
+    });
   }
-
   return (
-    <div className="flex justify-center w-200 mt-25">
+    <div className="flex justify-center mt-20">
       <div className="grid grid-cols-3 grid-rows-3">
-        {array.map((el, i) => (
+        {board.map((el, index) => (
           <Square
-            handleInput={handleInput}
-            value={input}
-            setInput={setInput}
-            array={array}
-            key={i}
-            id={i}
+            id={index}
+            value={board[index]}
+            key={index}
+            handleClick={handleClick}
+            board={board}
           />
         ))}
       </div>
@@ -36,16 +47,12 @@ function GameBox() {
   );
 }
 
-function Square({ input, setInput, id, handleInput }) {
+export default App;
+
+function Square({ handleClick, board, id }) {
   return (
-    <input
-      onSubmit={handleInput(id)}
-      value={input}
-      onChange={(e) => setInput(e.target.value)}
-      maxLength={1}
-      className=" border border-black grid justify-items-center h-20 w-20 text-4xl uppercase"
-    />
+    <div className="border text-4xl w-20 h-20 grid justify-items-stretch">
+      <button onClick={() => handleClick(id)}>{board[id]}</button>
+    </div>
   );
 }
-
-export default App;

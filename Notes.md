@@ -5608,3 +5608,7 @@ function OrderItem({ item, isLoadingIngredients, ingredients }) {
 
 export default OrderItem;
 ```
+
+# How to start projects >
+
+1:
